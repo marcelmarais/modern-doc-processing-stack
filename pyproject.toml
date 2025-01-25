@@ -1,0 +1,11 @@
+[project]
+name = "modern-doc-processing-stack"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "docling>=2.16.0",
+    "fastapi>=0.115.7",
+    "hypercorn>=0.17.3",
+]
