@@ -22,6 +22,18 @@ app = FastAPI()
 logger = setup_logger(__name__)
 settings = Settings()
 
+converter = DocumentConverter(
+    allowed_formats=AcceptedMimeTypes().get_accepted_input_formats(),
+    format_options={
+        InputFormat.PDF: PdfFormatOption(
+            pipeline_cls=StandardPdfPipeline, backend=PyPdfiumDocumentBackend
+        ),
+        InputFormat.DOCX: WordFormatOption(
+            pipeline_cls=SimplePipeline,
+        ),
+    },
+)
+
 
 @app.get("/health")
 async def health_check():
@@ -39,17 +51,6 @@ async def process_document(
     filename, contents = await validate_uploaded_file(file, settings.max_file_size)
     await file.close()
 
-    converter = DocumentConverter(
-        allowed_formats=AcceptedMimeTypes().get_accepted_input_formats(),
-        format_options={
-            InputFormat.PDF: PdfFormatOption(
-                pipeline_cls=StandardPdfPipeline, backend=PyPdfiumDocumentBackend
-            ),
-            InputFormat.DOCX: WordFormatOption(
-                pipeline_cls=SimplePipeline,
-            ),
-        },
-    )
     converter_result = converter.convert(
         DocumentStream(name=filename, stream=BytesIO(contents))
     )
