@@ -3,3 +3,5 @@
 *.pyc
 *.pyo
 *.pyd
+.mypy_cache/
+__pycache__/

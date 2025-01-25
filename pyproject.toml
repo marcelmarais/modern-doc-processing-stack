@@ -8,4 +8,11 @@ dependencies = [
     "docling>=2.16.0",
     "fastapi>=0.115.7",
     "hypercorn>=0.17.3",
+    "langdetect>=1.0.9",
+    "pydantic-settings>=2.7.1",
+    "pydantic>=2.10.6",
+    "python-magic>=0.4.27",
+    "python-multipart>=0.0.20",
+    "requests>=2.32.3",
+    "tiktoken>=0.8.0",
 ]
