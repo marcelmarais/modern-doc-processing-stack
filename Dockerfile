@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libmagic1 \
     build-essential \
     python3-dev \
+    poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml uv.lock ./

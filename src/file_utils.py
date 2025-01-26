@@ -1,16 +1,17 @@
-from fastapi import HTTPException, UploadFile, status
 import magic
 import tiktoken
+from fastapi import HTTPException, UploadFile, status
+from langdetect import LangDetectException, detect  # type: ignore
+
 from logger import setup_logger
 from models import AcceptedMimeTypes
-
 
 logger = setup_logger(__name__)
 
 
 async def validate_uploaded_file(
-    file: UploadFile, max_file_size: int
-) -> tuple[str, bytes]:
+    file: UploadFile, max_file_size: int, use_llm: bool
+) -> tuple[bytes, str, str]:
     filename, size = file.filename, file.size
     if not size:
         logger.error("File size is missing")
@@ -29,19 +30,37 @@ async def validate_uploaded_file(
     if not filename:
         logger.warning("File name is missing. Setting to 'Document'")
         filename = "Document"
-
-    contents = await file.read()
-    content_type_from_content = magic.from_buffer(contents, mime=True)
-    logger.info(f"Content type from content: {content_type_from_content}")
-
-    if not AcceptedMimeTypes().is_allowed_mime_type(content_type_from_content):
-        logger.error(f"Content type {content_type_from_content} is not allowed")
+    if not filename and use_llm:
+        logger.error(
+            "File name / path is missing while attempting to use LLM for processing"
+        )
         raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail=f"Unsupported media type: {content_type_from_content}",
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File name / path is missing while attempting to use LLM",
         )
 
-    return filename, contents
+    contents = await file.read()
+    mime_type = magic.from_buffer(contents, mime=True)
+
+    if mime_type != "application/pdf" and use_llm:
+        logger.error(
+            "LLM processing is only supported for PDF files. Please upload a PDF file."
+        )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="LLM processing is only supported for PDF files. Please upload a PDF file.",
+        )
+
+    if not AcceptedMimeTypes().is_allowed_mime_type(mime_type):
+        logger.error(f"Content type {mime_type} is not allowed")
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported media type: {mime_type}",
+        )
+
+    logger.info(f"Uploaded file validated: {filename} with mime type {mime_type}")
+
+    return contents, filename, mime_type
 
 
 def get_sample_text(text: str, max_chars: int = 3000) -> str:
@@ -59,6 +78,14 @@ def get_sample_text(text: str, max_chars: int = 3000) -> str:
     return text[:last_space]
 
 
+def detect_language(text: str) -> str:
+    try:
+        return detect(text)
+    except LangDetectException:
+        return "unknown"
+
+
 def count_tokens(text: str, encoding_name: str) -> int:
     encoding = tiktoken.get_encoding(encoding_name)
+    return len(encoding.encode(text))
     return len(encoding.encode(text))

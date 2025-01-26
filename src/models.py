@@ -1,12 +1,16 @@
-from fastapi import UploadFile
-from pydantic import BaseModel
-
 from docling.datamodel.base_models import InputFormat
+from pydantic import BaseModel, SecretStr
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    api_key: SecretStr
+    openai_api_key: SecretStr
     max_file_size: int = 10 * 1024 * 1024  # 10MB
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
 class TokenCount(BaseModel):
@@ -41,11 +45,11 @@ class AcceptedMimeTypes(BaseModel):
     }
 
     def is_allowed_mime_type(self, mime_type: str) -> bool:
-        for format_types in self.mime_types.values():
-            if isinstance(format_types, list):
-                if mime_type in format_types:
+        for mime_type_entry in self.mime_types.values():
+            if isinstance(mime_type_entry, list):
+                if mime_type in mime_type_entry:
                     return True
-            elif mime_type == format_types:
+            elif mime_type == mime_type_entry:
                 return True
         return False
 
