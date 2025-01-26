@@ -17,6 +17,5 @@ RUN uv sync --frozen --no-install-project --no-dev
 ADD . /app
 RUN uv sync --frozen --no-dev
 
-EXPOSE $PORT
-CMD uv run hypercorn src/main:app --bind 0.0.0.0:$PORT
+CMD uv run hypercorn src/main:app --bind 0.0.0.0
 
