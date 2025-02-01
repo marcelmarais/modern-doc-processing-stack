@@ -2,15 +2,6 @@ import logging
 
 
 def setup_logger(name: str) -> logging.Logger:
-    """
-    Configure and return a logger with both console and file handlers.
-
-    Args:
-        name: The name of the logger to create
-
-    Returns:
-        logging.Logger: Configured logger instance
-    """
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
 
