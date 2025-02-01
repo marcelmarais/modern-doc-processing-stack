@@ -9,10 +9,17 @@ dependencies = [
     "fastapi>=0.115.7",
     "hypercorn>=0.17.3",
     "langdetect>=1.0.9",
+    "pdf2image>=1.17.0",
+    "py-zerox>=0.0.7",
     "pydantic-settings>=2.7.1",
     "pydantic>=2.10.6",
     "python-magic>=0.4.27",
     "python-multipart>=0.0.20",
     "requests>=2.32.3",
     "tiktoken>=0.8.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.9.3",
 ]
