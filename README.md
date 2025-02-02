@@ -4,6 +4,8 @@ This is a production-ready document conversion and processing engine (and primar
 
 > [Blog](https://www.differentiated.io/blog/the-modern-document-processing-stack)
 
+![DocProcessingBlog](https://github.com/user-attachments/assets/666ad031-9da0-4db7-acbe-1f570ef9b340)
+
 ---
 
 ## Features
