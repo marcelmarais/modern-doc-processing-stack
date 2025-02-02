@@ -1,14 +1,16 @@
 # The Modern Document Processing Stack
 
-This is a production-ready document conversion and processing engine. It uses powerful open-source libraries to convert common file formats (PDF, DOCX, etc.) and web content to Markdown—a format that is friendly for LLMs and embedding models.
+This is a production-ready document conversion and processing engine (and primarily a wrapper of other tools). It uses open-source libraries to convert common file formats (PDF, DOCX, etc.) and web content to Markdown—a format that is friendly for LLMs and embedding models.
+
+> [Blog](https://www.differentiated.io/blog/the-modern-document-processing-stack)
 
 ---
 
 ## Features
 
-- **Multi-format Support**: Converts PDFs, DOCX, and more to Markdown.
+- **Multi-format Support**: Converts PDFs, DOCX, and more to Markdown (thanks to [Docling](https://ds4sd.github.io/docling/))
 - **LLM Integration**: Optionally uses a VLLM (GPT4o) via [Zerox](https://github.com/getomni-ai/zerox) for processing visually complex documents.
-- **Web Content Scraping**: Converts webpages to Markdown using Jina AI Reader.
+- **Web Content Scraping**: Converts webpages to Markdown using [Jina AI Reader](https://jina.ai/reader/).
 - **Metadata Extraction**: Detects document language and calculates token counts for popular tokenizers (`cl100k_base` & `o200k_base`).
 
 ---
